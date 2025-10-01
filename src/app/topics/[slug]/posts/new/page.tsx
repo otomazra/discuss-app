@@ -1,3 +1,3 @@
-export default function NewPostPage(){
+export default function PostCreatePage(){
     return <div>New Post</div>
 }
