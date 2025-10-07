@@ -50,8 +50,13 @@ export default function TopicCreateForm(): JSX.Element {
               isInvalid={!!formState.errors.description}
               errorMessage={formState.errors.description?.join(", ")}
             />
+            {formState.errors._form ? (
+              <div className="rounded p-2 bg-red-600 text-white border border-red-500">
+                {formState.errors._form?.join(", ")}
+              </div>
+            ) : null}
+            <Button type="submit">Submit</Button>
           </div>
-          <Button type="submit">Submit</Button>
         </form>
       </PopoverContent>
     </Popover>
