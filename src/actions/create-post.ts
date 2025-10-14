@@ -3,8 +3,9 @@ import { z } from "zod";
 import type { Post } from "@prisma/client";
 import { auth } from "@/auth";
 import { db } from "@/db";
-import {redirect} from "next/navigation";
+import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
+import paths from "@/paths";
 const createPostSchema = z.object({
   title: z
     .string()
@@ -24,6 +25,7 @@ interface CreatePostFormState {
 }
 
 export async function createPost(
+  slug: string,
   formState: CreatePostFormState,
   formData: FormData
 ): Promise<CreatePostFormState> {
@@ -37,7 +39,7 @@ export async function createPost(
   }
 
   const session = await auth();
-  if (!session || !session.user) {
+  if (!session || !session.user || !session.user?.id) {
     return {
       errors: {
         _form: ["You must be logged in to do this"],
@@ -45,35 +47,45 @@ export async function createPost(
     };
   }
 
-//   let post: Post;
-//   try {
-//     post = await db.post.create({
-//       data: {
-//         userId: session.user?.id as string,
-//         title: result.data.title,
-//         content: result.data.content,
-//       },
-//     });
-//   } catch (error) {
-//     if (error instanceof Error) {
-//       return {
-//         errors: {
-//           _form: [error.message],
-//         },
-//       };
-//     } else {
-//       return {
-//         errors: {
-//           _form: ["Something went wrong"],
-//         },
-//       };
-//     }
-//   }
-  
-  return {
-    errors: {}
+  const topic = await db.topic.findFirst({
+    where: { slug: slug },
+  });
+  if (!topic) {
+    return {
+      errors: {
+        _form: ["Topic was not found"],
+      },
+    };
   }
 
-  // TODO: Revalidate the show topic page
+  let post: Post;
+  try {
+    post = await db.post.create({
+      data: {
+        title: result.data.title,
+        content: result.data.content,
+        userId: session.user?.id,
+        topicId: topic.id,
+      }
+    })
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      return {
+        errors: {
+          _form: [error.message],
+        },
+      };
+    } else {
+      return {
+        errors: {
+          _form: ["Post was not created"],
+        },
+      };
+    }
+  }
+  console.log(post.id);
 
+  revalidatePath(paths.topicShow(slug));
+  redirect(paths.postShow(slug, post.id));
+  // TODO: Revalidate the show topic page
 }

@@ -12,22 +12,20 @@ import * as actions from "@/actions";
 import { startTransition } from "react";
 import FormButton from "../common/form-button";
 
-type topicId = {
-  topicId: string;
+type PostCreateFormProps = {
+  slug: string;
 };
 
-export default function PostCreateForm({ topicId }: topicId): JSX.Element {
-  const [formState, action, isPending] = useActionState(actions.createPost, {
-    errors: {},
-  });
-
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const formData = new FormData(event.currentTarget);
-    startTransition(() => {
-      action(formData);
-    });
-  }
+export default function PostCreateForm({
+  slug,
+}: PostCreateFormProps): JSX.Element {
+  const [formState, action, isPending] = useActionState(
+    actions.createPost.bind(null, slug),
+    {
+      errors: {},
+    }
+  );
+  console.log("post-create-form: " + slug);
 
   return (
     <Popover placement="left">
@@ -58,7 +56,9 @@ export default function PostCreateForm({ topicId }: topicId): JSX.Element {
               errorMessage={formState.errors.content?.join(", ")}
             />
             {formState.errors._form ? (
-              <div className="rounded bg-red-200 border border-red-200 p-2">{formState.errors._form.join(", ")}</div>
+              <div className="rounded bg-red-200 border border-red-200 p-2">
+                {formState.errors._form.join(", ")}
+              </div>
             ) : null}
             <FormButton isLoading={isPending}>Create Post</FormButton>
           </div>
