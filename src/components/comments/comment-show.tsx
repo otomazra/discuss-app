@@ -2,16 +2,19 @@ import Image from "next/image";
 import { Button } from "@nextui-org/react";
 import CommentCreateForm from "@/components/comments/comment-create-form";
 import { CommentWithAuthor } from "@/db/queries/comments";
+import { fetchCommentsByPostId } from "@/db/queries/comments";
 
 interface CommentShowProps {
   commentId: string;
-  comments: CommentWithAuthor[];
+  // comments: CommentWithAuthor[];
+  postId: string;
 }
 
 // TODO: Get a list of comments
-export default function CommentShow({ commentId, comments }: CommentShowProps) {
-  const comment = comments.find((c) => c.id === commentId);
-
+export default async function CommentShow({postId, commentId }: CommentShowProps) {
+  // const comment = comments.find((c) => c.id === commentId);
+const comments = await fetchCommentsByPostId(postId);
+const comment = comments.find((c)=>c.id===commentId)
   if (!comment) {
     return null;
   }
@@ -19,7 +22,7 @@ export default function CommentShow({ commentId, comments }: CommentShowProps) {
   const children = comments.filter((c) => c.parentId === commentId);
   const renderedChildren = children.map((child) => {
     return (
-      <CommentShow key={child.id} commentId={child.id} comments={comments} />
+      <CommentShow key={child.id} postId={postId} commentId={child.id} />
     );
   });
 

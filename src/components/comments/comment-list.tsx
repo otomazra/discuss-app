@@ -4,12 +4,17 @@ import { CommentWithAuthor, fetchCommentsByPostId } from "@/db/queries/comments"
 import {db} from '@/db';
 
 interface CommentListProps {
- fetchData: ()=>Promise<CommentWithAuthor[]>
+//  fetchData: ()=>Promise<CommentWithAuthor[]>
+ postId: string;
 }
 
 // TODO: Get a list of comments from somewhere
-export default async function CommentList({fetchData}: CommentListProps) {
-  const comments = await fetchData();
+// export default async function CommentList({fetchData, postId}: CommentListProps) {
+//   const comments = await fetchData();
+
+export default async function CommentList({postId}:CommentListProps){
+
+  const comments = await fetchCommentsByPostId(postId);
 
   const topLevelComments = comments?.filter(
     (comment) => comment.parentId === null
@@ -18,8 +23,9 @@ export default async function CommentList({fetchData}: CommentListProps) {
     return (
       <CommentShow
         key={comment.id}
+        postId={postId}
         commentId={comment.id}
-        comments={comments}
+        // comments={comments}
       />
     );
   });
