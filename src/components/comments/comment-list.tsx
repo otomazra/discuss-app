@@ -1,7 +1,7 @@
 import CommentShow from "@/components/comments/comment-show";
-import type { Comment } from "@prisma/client";
-import { CommentWithAuthor, fetchCommentsByPostId } from "@/db/queries/comments";
-import {db} from '@/db';
+// import type { Comment } from "@prisma/client";
+import { fetchCommentsByPostId } from "@/db/queries/comments";
+// import {db} from '@/db';
 
 interface CommentListProps {
 //  fetchData: ()=>Promise<CommentWithAuthor[]>

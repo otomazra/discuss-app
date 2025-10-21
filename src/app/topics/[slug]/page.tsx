@@ -1,7 +1,7 @@
 import PostCreateForm from "@/components/posts/post-create-form";
 import PostList from "@/components/posts/post-list";
 import {fetchPostByTopicSlug} from "@/db/queries/posts";
-import { db } from "@/db";
+// import { db } from "@/db";
 interface TopicShowPageProps {
     params: Promise<{
         slug :string,

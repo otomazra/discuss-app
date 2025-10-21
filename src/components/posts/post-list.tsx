@@ -1,4 +1,4 @@
-import { fetchPostByTopicSlug } from '@/db/queries/posts';
+// import { fetchPostByTopicSlug } from '@/db/queries/posts';
 import Link from 'next/link';
 import paths from '@/paths';
 import type { PostWithData } from '@/db/queries/posts';
