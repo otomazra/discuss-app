@@ -10,7 +10,7 @@ export default function SearchInput() {
   return (
     <form action={actions.search}>
       <Input name = "term" defaultValue={searchParams.get("term") || ""} />
-        <Button type="submit">Search</Button>
+        {/* <Button type="submit">Search</Button> */}
     </form>
   );
 }
