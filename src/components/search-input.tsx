@@ -1,7 +1,7 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { Input, Button } from "@nextui-org/react";
+import { Input} from "@nextui-org/react";
 import * as actions from "@/actions";
 
 export default function SearchInput() {
@@ -10,7 +10,6 @@ export default function SearchInput() {
   return (
     <form action={actions.search}>
       <Input name = "term" defaultValue={searchParams.get("term") || ""} />
-        {/* <Button type="submit">Search</Button> */}
     </form>
   );
 }
